@@ -1,0 +1,51 @@
+# to verify DNS
+kubectl run -it busybox --image=busybox:1.27 -- sh
+ 
+> nslookup kubernetes.default
+Server:    10.96.0.10
+Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+ 
+Name:      kubernetes.default
+Address 1: 10.96.0.1 kubernetes.default.svc.cluster.local
+ 
+reference :
+https://www.ibm.com/support/knowledgecenter/en/SSYGQH_6.0.0/admin/install/cp_prereq_kubernetes_dns.html
+
+
+# to verify cluster
+# deploy sample application : nginx
+kubectl create deployment nginx --image=nginx
+ 
+# Check the status of pods (i.e., running)
+kubectl get pods -o wide
+ 
+#scale the depoloyment :
+kubectl scale --replicas=4 deployment/nginx
+ 
+#delete deployment
+kubectl delete deployment nginx
+
+
+# vagrant commands
+vagrant up
+vagrant destroy "vm name / id"
+vagrant halt
+vagrant snapshot save "name"
+ex : vagrant snapshot save "clean_kube_cluster"
+# to bring the machines back from snapshot
+vagrant up
+# to reset to the snapshot
+vagrant snapshot restore
+
+# accessing kube cluster from host machine
+vim /etc/hosts
+172.16.16.100 kmaster.example.com kmaster
+172.16.16.101 kworker1.example.com kworker1
+172.16.16.102 kworker2.example.com kworker2
+
+# create a kube directory
+mkdir ~/.kube 
+scp vagrant@kmaster.example.com:.kube/config .kube/
+pw : vagrant
+# currently not working, need to revisit.
+
